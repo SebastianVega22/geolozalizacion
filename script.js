@@ -1,4 +1,6 @@
 var map;
+var targetLat = 4.688450; // Latitud de la ubicación específica (a 72c-87, Dg. 81f #72c1, Bogotá)
+var targetLon = -74.082769; // Longitud de la ubicación específica
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -38,6 +40,34 @@ function showPosition(position) {
     L.marker([lat, lon]).addTo(map)
         .bindPopup("¡Aquí estás con una precisión de " + accuracy + " metros!")
         .openPopup();
+
+    // Comparar la ubicación del usuario con la ubicación específica
+    var distance = getDistanceFromLatLonInKm(lat, lon, targetLat, targetLon) * 1000; // Convertir a metros
+    var message = document.getElementById('message');
+    
+    if (distance < 50) { // Si la distancia es menor a 50 metros
+        message.textContent = "Te encuentras en el sitio.";
+    } else {
+        message.textContent = "No te encuentras en el sitio.";
+    }
+}
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radio de la Tierra en km
+    var dLat = deg2rad(lat2-lat1); 
+    var dLon = deg2rad(lon2-lon1); 
+    var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distancia en km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180);
 }
 
 function showError(error) {
@@ -51,8 +81,4 @@ function showError(error) {
         case error.TIMEOUT:
             alert("La solicitud de ubicación ha caducado.");
             break;
-        case error.UNKNOWN_ERROR:
-            alert("Se produjo un error desconocido.");
-            break;
-    }
-}
+        case
