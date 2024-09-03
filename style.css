@@ -37,3 +37,9 @@ button:hover {
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
