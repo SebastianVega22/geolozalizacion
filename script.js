@@ -71,14 +71,20 @@ function deg2rad(deg) {
 }
 
 function showError(error) {
+    var message = document.getElementById('message');
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            alert("El usuario negó la solicitud de geolocalización.");
+            message.textContent = "El usuario negó la solicitud de geolocalización.";
             break;
         case error.POSITION_UNAVAILABLE:
-            alert("La información de ubicación no está disponible.");
+            message.textContent = "La información de ubicación no está disponible.";
             break;
         case error.TIMEOUT:
-            alert("La solicitud de ubicación ha caducado.");
+            message.textContent = "La solicitud de ubicación ha caducado.";
             break;
-        case
+        case error.UNKNOWN_ERROR:
+            message.textContent = "Se produjo un error desconocido.";
+            break;
+    }
+}
+
