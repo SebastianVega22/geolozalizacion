@@ -2,7 +2,18 @@ var map;
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
+        navigator.geolocation.getCurrentPosition(showPosition, function(error) {
+            if (error.code === error.TIMEOUT) {
+                // Reintentar si hubo un timeout
+                getLocation();
+            } else {
+                showError(error);
+            }
+        }, {
+            enableHighAccuracy: true, // Solicita la máxima precisión
+            timeout: 10000, // Espera máxima de 10 segundos
+            maximumAge: 0 // No usar posiciones anteriores
+        });
     } else {
         alert("La geolocalización no es soportada por este navegador.");
     }
@@ -11,15 +22,21 @@ function getLocation() {
 function showPosition(position) {
     var lat = position.coords.latitude;
     var lon = position.coords.longitude;
-    
-    map = L.map('map').setView([lat, lon], 15);
+    var accuracy = position.coords.accuracy; // Precisión en metros
+
+    // Ajustar el nivel de zoom según la precisión de la ubicación
+    var zoomLevel = accuracy < 50 ? 18 : 15;
+
+    // Inicializar el mapa con la ubicación y el nivel de zoom adecuado
+    map = L.map('map').setView([lat, lon], zoomLevel);
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     
+    // Agregar un marcador en la ubicación actual con una ventana emergente que muestra la precisión
     L.marker([lat, lon]).addTo(map)
-        .bindPopup("¡Aquí estás!")
+        .bindPopup("¡Aquí estás con una precisión de " + accuracy + " metros!")
         .openPopup();
 }
 
