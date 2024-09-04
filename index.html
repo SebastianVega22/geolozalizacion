@@ -3,18 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparar Ubicación</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
+    <title>QR Code - Aulas Uniminuto</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .qr-container {
+            text-align: center;
+        }
+        img {
+            width: 300px;
+            height: 300px;
+        }
+        .qr-text {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function updateQRCode() {
+            const qrCode = document.getElementById("qrCode");
+            qrCode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.aulasuniminuto.edu.co";
+        }
+
+        window.onload = function() {
+            updateQRCode(); // Initial load
+            setInterval(updateQRCode, 180000); // Update every 3 minutes (180,000 ms)
+        };
+    </script>
 </head>
 <body>
-    <h1>Comparar Ubicación del Dispositivo</h1>
-    <button onclick="getLocation()">Mostrar Ubicación</button>
-    <p id="message"></p>
-    <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <div class="qr-container">
+        <h1>Código QR para Aulas Uniminuto</h1>
+        <img id="qrCode" src="" alt="QR Code">
+        <div class="qr-text">Este QR te llevará a las Aulas Uniminuto</div>
+    </div>
 </body>
 </html>
-
