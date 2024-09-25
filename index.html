@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code - Validacion ubicacion</title>
+    <title>QR Code - Validación ubicación</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script> <!-- Biblioteca para encriptar -->
     <style>
         body {
             display: flex;
@@ -29,20 +30,27 @@
     <script>
         function updateQRCode() {
             const qrCode = document.getElementById("qrCode");
-            qrCode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://sebastianvega22.github.io/mi-ubicacion/";
+            
+            // Encriptar el enlace antes de generar el QR
+            const secretKey = "mi_clave_secreta"; // Asegúrate de guardar bien la clave
+            const link = "https://sebastianvega22.github.io/mi-ubicacion/";
+            const encryptedLink = CryptoJS.AES.encrypt(link, secretKey).toString(); // Encriptar el enlace
+            
+            // Generar el código QR con el enlace encriptado
+            qrCode.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(encryptedLink);
         }
 
         window.onload = function() {
-            updateQRCode(); // Initial load
-            setInterval(updateQRCode, 6000); // Update every 3 minutes (180,000 ms)
+            updateQRCode(); // Cargar el QR al inicio
+            setInterval(updateQRCode, 180000); // Actualizar cada 3 minutos (180,000 ms)
         };
     </script>
 </head>
 <body>
     <div class="qr-container">
-        <h1>Código QR para Validar ubicacion</h1>
+        <h1>Código QR para Validar ubicación</h1>
         <img id="qrCode" src="" alt="QR Code">
-        <div class="qr-text">Este QR te llevará a validar tu Ubicacion en el recinto</div>
+        <div class="qr-text">Este QR te llevará a validar tu Ubicación en el recinto</div>
     </div>
 </body>
 </html>
